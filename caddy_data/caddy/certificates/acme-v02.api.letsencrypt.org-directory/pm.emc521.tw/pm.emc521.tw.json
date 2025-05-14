@@ -1,0 +1,19 @@
+{
+	"sans": [
+		"pm.emc521.tw"
+	],
+	"issuer_data": {
+		"url": "https://acme-v02.api.letsencrypt.org/acme/cert/050ba34b3c65701fbf4fc72be4780d664cdd",
+		"ca": "https://acme-v02.api.letsencrypt.org/directory",
+		"account": "https://acme-v02.api.letsencrypt.org/acme/acct/2390721437",
+		"renewal_info": {
+			"suggestedWindow": {
+				"start": "2025-07-08T19:38:41Z",
+				"end": "2025-07-10T14:49:31Z"
+			},
+			"_uniqueIdentifier": "kydGmAOpUWiOmNbEQkjbI79YlNI.BQujSzxlcB-_T8cr5HgNZkzd",
+			"_retryAfter": "2025-05-10T23:53:11.039110656Z",
+			"_selectedTime": "2025-07-10T12:58:43Z"
+		}
+	}
+}
