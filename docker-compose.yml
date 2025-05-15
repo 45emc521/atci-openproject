@@ -16,8 +16,9 @@ x-op-app: &app
         OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-true}"
         OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-localhost:8080}"
         OPENPROJECT_HSTS: "${OPENPROJECT_HSTS:-true}"
-        RAILS_CACHE_STORE: "memcache"
-        OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+        RAILS_CACHE_STORE: "redis"
+        # OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
+        OPENPROJECT_CACHE_REDIS_URL: "redis://cache:6379"
         OPENPROJECT_RAILS__RELATIVE__URL__ROOT: "${OPENPROJECT_RAILS__RELATIVE__URL__ROOT:-}"
         DATABASE_URL: "${DATABASE_URL:-postgres://postgres:p4ssw0rd@db/openproject?pool=20&encoding=unicode&reconnect=true}"
         RAILS_MIN_THREADS: ${RAILS_MIN_THREADS:-4}
@@ -41,8 +42,8 @@ services:
             - backend
 
     cache:
-        image: memcached
-        <<: *restart_policy
+        image: redis:7-alpine
+        restart: unless-stopped
         networks:
             - backend
 
@@ -61,7 +62,7 @@ services:
         networks:
             - frontend
         volumes:
-            - ../cert/meet:/data/caddy/certs
+            - ../cert/pm:/data/caddy/certs
 
     web:
         <<: *app

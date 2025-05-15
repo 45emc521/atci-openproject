@@ -1,5 +1,5 @@
-meet.emc521.tw {
-	tls /data/caddy/certs/meet.emc521.tw.crt /data/caddy/certs/meet.emc521.tw.key
+pm.emc521.tw {
+	tls /data/caddy/certs/pm.emc521.tw.crt /data/caddy/certs/pm.emc521.tw.key
 	reverse_proxy * http://${APP_HOST}:8080 {
 		# The following directives are needed to make the proxy forward explicitly the X-Forwarded-* headers. If unset,
 		# Caddy will reset them. See: https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#defaults
