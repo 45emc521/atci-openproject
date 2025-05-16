@@ -13,12 +13,15 @@ x-op-image: &image
 x-op-app: &app
     <<: [*image, *restart_policy]
     environment:
+        RAILS_LOG_LEVEL: "debug"
+        # OPENPROJECT_CACHE_MODE: "enabled"
         OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-true}"
         OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-localhost:8080}"
         OPENPROJECT_HSTS: "${OPENPROJECT_HSTS:-true}"
-        RAILS_CACHE_STORE: "redis"
+        OPENPROJECT_RAILS_CACHE_STORE: "redis"
         # OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
-        OPENPROJECT_CACHE_REDIS_URL: "redis://cache:6379"
+        OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
+        OPENPROJECT_CACHE_NAMESPACE: "openproject"
         OPENPROJECT_RAILS__RELATIVE__URL__ROOT: "${OPENPROJECT_RAILS__RELATIVE__URL__ROOT:-}"
         DATABASE_URL: "${DATABASE_URL:-postgres://postgres:p4ssw0rd@db/openproject?pool=20&encoding=unicode&reconnect=true}"
         RAILS_MIN_THREADS: ${RAILS_MIN_THREADS:-4}
@@ -41,7 +44,7 @@ services:
         networks:
             - backend
 
-    cache:
+    redis:
         image: redis:7-alpine
         restart: unless-stopped
         networks:
@@ -72,10 +75,14 @@ services:
             - backend
         depends_on:
             - db
-            - cache
+            - redis
             - seeder
         labels:
             - autoheal=true
+        # environment:
+        #     - OPENPROJECT_RAILS_CACHE_STORE: "redis"
+        #     - OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
+        #     - OPENPROJECT_CACHE_NAMESPACE: "openproject"
         healthcheck:
             test:
                 [
@@ -105,8 +112,12 @@ services:
             - backend
         depends_on:
             - db
-            - cache
+            - redis
             - seeder
+        # environment:
+        #     - OPENPROJECT_RAILS_CACHE_STORE: "redis"
+        #     - OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
+        #     - OPENPROJECT_CACHE_NAMESPACE: "openproject"
 
     cron:
         <<: *app
@@ -115,7 +126,7 @@ services:
             - backend
         depends_on:
             - db
-            - cache
+            - redis
             - seeder
 
     seeder:
