@@ -47,6 +47,8 @@ services:
     redis:
         image: redis:7-alpine
         restart: unless-stopped
+        ports:
+            - "6379:6379"
         networks:
             - backend
 
@@ -79,10 +81,6 @@ services:
             - seeder
         labels:
             - autoheal=true
-        # environment:
-        #     - OPENPROJECT_RAILS_CACHE_STORE: "redis"
-        #     - OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
-        #     - OPENPROJECT_CACHE_NAMESPACE: "openproject"
         healthcheck:
             test:
                 [
@@ -114,10 +112,6 @@ services:
             - db
             - redis
             - seeder
-        # environment:
-        #     - OPENPROJECT_RAILS_CACHE_STORE: "redis"
-        #     - OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
-        #     - OPENPROJECT_CACHE_NAMESPACE: "openproject"
 
     cron:
         <<: *app
