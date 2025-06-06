@@ -2,4 +2,4 @@ docker-compose.override.yml
 backups/
 .env
 *.sql
-.code-workspace
+*.code-workspace
