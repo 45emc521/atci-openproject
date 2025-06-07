@@ -14,14 +14,13 @@ x-op-app: &app
     <<: [*image, *restart_policy]
     environment:
         RAILS_LOG_LEVEL: "debug"
-        # OPENPROJECT_CACHE_MODE: "enabled"
         OPENPROJECT_HTTPS: "${OPENPROJECT_HTTPS:-true}"
         OPENPROJECT_HOST__NAME: "${OPENPROJECT_HOST__NAME:-localhost:8080}"
         OPENPROJECT_HSTS: "${OPENPROJECT_HSTS:-true}"
         OPENPROJECT_RAILS_CACHE_STORE: "redis"
         # OPENPROJECT_CACHE__MEMCACHE__SERVER: "cache:11211"
-        OPENPROJECT_CACHE_REDIS_URL: "redis://redis:6379/0"
-        OPENPROJECT_CACHE_NAMESPACE: "openproject"
+        OPENPROJECT_CACHE__REDIS_URL: "redis://redis:6379/0"
+        OPENPROJECT_CACHE__NAMESPACE: "openproject"
         OPENPROJECT_RAILS__RELATIVE__URL__ROOT: "${OPENPROJECT_RAILS__RELATIVE__URL__ROOT:-}"
         DATABASE_URL: "${DATABASE_URL:-postgres://postgres:p4ssw0rd@db/openproject?pool=20&encoding=unicode&reconnect=true}"
         RAILS_MIN_THREADS: ${RAILS_MIN_THREADS:-4}
@@ -127,5 +126,15 @@ services:
         <<: *app
         command: "./docker/prod/seeder"
         restart: on-failure
+        networks:
+            - backend
+
+    redis-commander:
+        image: rediscommander/redis-commander:latest
+        restart: unless-stopped
+        ports:
+            - "8081:8081"
+        environment:
+            - REDIS_HOSTS=local:redis:6379
         networks:
             - backend
